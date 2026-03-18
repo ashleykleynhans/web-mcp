@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, Mock, patch
 import httpx
 import pytest
 
-from web_mcp.server import USER_AGENT, fetch_raw
+from web_mcp.server import USER_AGENT, fetch_raw, fetch_text
 
 
 @pytest.fixture
@@ -61,5 +61,53 @@ class TestFetchRaw:
 
         with patch("web_mcp.server.httpx.AsyncClient", return_value=mock_client):
             result = await fetch_raw(url="https://unreachable.test")
+
+        assert "Request error" in result
+
+
+class TestFetchText:
+    async def test_returns_extracted_text(self, mock_response):
+        mock_response.text = "<html><body><script>var x=1;</script><style>body{}</style><h1>Hello</h1><p>World</p></body></html>"
+        mock_client = AsyncMock(spec=httpx.AsyncClient)
+        mock_client.get = AsyncMock(return_value=mock_response)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+
+        with patch("web_mcp.server.httpx.AsyncClient", return_value=mock_client):
+            result = await fetch_text(url="https://example.com")
+
+        assert "Hello" in result
+        assert "World" in result
+        assert "var x=1" not in result
+        assert "body{}" not in result
+
+    async def test_http_error_returns_message(self):
+        mock_client = AsyncMock(spec=httpx.AsyncClient)
+        mock_response = AsyncMock(spec=httpx.Response)
+        mock_response.status_code = 500
+        mock_response.raise_for_status = Mock(
+            side_effect=httpx.HTTPStatusError(
+                "Server Error", request=Mock(), response=mock_response
+            )
+        )
+        mock_client.get = AsyncMock(return_value=mock_response)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+
+        with patch("web_mcp.server.httpx.AsyncClient", return_value=mock_client):
+            result = await fetch_text(url="https://example.com/error")
+
+        assert "HTTP error 500" in result
+
+    async def test_request_error_returns_message(self):
+        mock_client = AsyncMock(spec=httpx.AsyncClient)
+        mock_client.get = AsyncMock(
+            side_effect=httpx.RequestError("Connection refused", request=Mock())
+        )
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+
+        with patch("web_mcp.server.httpx.AsyncClient", return_value=mock_client):
+            result = await fetch_text(url="https://unreachable.test")
 
         assert "Request error" in result
