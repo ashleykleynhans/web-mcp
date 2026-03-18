@@ -37,7 +37,7 @@ Add to your Claude Desktop config (`claude_desktop_config.json`):
 ## Tests
 
 ```bash
-.venv/bin/pip install pytest pytest-cov pytest-asyncio
+.venv/bin/pip install -e ".[test]"
 .venv/bin/pytest -v
 ```
 
