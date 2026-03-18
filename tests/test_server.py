@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, Mock, patch
 import httpx
 import pytest
 
-from web_mcp.server import USER_AGENT, fetch_raw, fetch_text
+from web_mcp.server import USER_AGENT, fetch_raw, fetch_text, main, mcp as mcp_server
 
 
 @pytest.fixture
@@ -111,3 +111,10 @@ class TestFetchText:
             result = await fetch_text(url="https://unreachable.test")
 
         assert "Request error" in result
+
+
+class TestMain:
+    def test_main_calls_run(self):
+        with patch.object(mcp_server, "run") as mock_run:
+            main()
+            mock_run.assert_called_once()

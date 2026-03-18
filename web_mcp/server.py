@@ -45,3 +45,7 @@ async def fetch_text(url: str) -> str:
         return f"HTTP error {e.response.status_code} fetching {url}"
     except httpx.RequestError:
         return f"Request error fetching {url}"
+
+
+def main():
+    mcp.run()
