@@ -14,6 +14,12 @@ python -m venv .venv
 
 ## Usage
 
+### Claude Code
+
+```bash
+claude mcp add web-mcp /path/to/web-mcp/.venv/bin/web-mcp
+```
+
 ### Claude Desktop
 
 Add to your Claude Desktop config (`claude_desktop_config.json`):
@@ -22,16 +28,10 @@ Add to your Claude Desktop config (`claude_desktop_config.json`):
 {
   "mcpServers": {
     "web-mcp": {
-      "command": "/path/to/.venv/bin/web-mcp"
+      "command": "/path/to/web-mcp/.venv/bin/web-mcp"
     }
   }
 }
-```
-
-### CLI
-
-```bash
-.venv/bin/web-mcp
 ```
 
 ## Tests
