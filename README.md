@@ -22,7 +22,7 @@ claude mcp add web-mcp /path/to/web-mcp/.venv/bin/web-mcp
 
 ### Claude Desktop
 
-Add to your Claude Desktop config (`claude_desktop_config.json`):
+Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
 
 ```json
 {
