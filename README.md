@@ -34,6 +34,10 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 }
 ```
 
+## Port
+
+The default port for SSE/streamable-http transport is `9678`.
+
 ## Tests
 
 ```bash
