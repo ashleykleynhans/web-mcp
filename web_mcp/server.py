@@ -5,7 +5,7 @@ import httpx
 
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
 
-mcp = FastMCP("web-mcp")
+mcp = FastMCP("web-mcp", port=9678)
 
 
 @mcp.tool()
@@ -48,4 +48,4 @@ async def fetch_text(url: str) -> str:
 
 
 def main():
-    mcp.run(port=9678)
+    mcp.run()
