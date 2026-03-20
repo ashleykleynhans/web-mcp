@@ -48,4 +48,4 @@ async def fetch_text(url: str) -> str:
 
 
 def main():
-    mcp.run()
+    mcp.run(port=9678)
